@@ -149,17 +149,32 @@ eval bds b@(P (S op) (P left (P right Nil)))
               _ -> Nothing -- will not happen
           (_, _) -> Nothing
 -- eval Boolean unary Boolean not function application (e.g., (! true))
--- TODO
-
+eval bds e@(P (S "!") (P expr Nil)) =
+  let evalExpr = eval bds expr
+   in case evalExpr of
+        (Just (B bool)) -> Just (B (not bool))
+        _ -> Nothing
 -- eval built in function application cons (e.g., (cons 1 nil) )
--- TODO
-
+eval bds p@(P (S "cons") (P left (P right Nil))) =
+  let lr = eval bds left
+      rr = eval bds right
+   in case (lr, rr) of
+        (Just le, Just re) -> Just (P le re)
+        (_, _) -> Nothing
 -- eval built in function application car (e.g., (car (cons 1 nil)) )
--- TODO
-
+eval bds p@(P (S "car") (P fst snd)) =
+  let fstEval = eval bds fst
+      sndEval = eval bds snd
+   in case (fstEval, sndEval) of
+        (Just (P first _), _) -> Just first
+        _ -> Nothing
 -- eval built in function application cdr (e.g., (cdr (cons 1 nil)) )
--- TODO
-
+-- eval bds p@(P (S "cdr") (P fst snd)) =
+--   let fstEval = eval bds fst
+--       sndEval = eval bds snd
+--    in case (fstEval, sndEval) of
+--         (Just _, (P second _)) -> Just second
+--         _ -> Nothing
 -- eval quote special form
 -- TODO
 
