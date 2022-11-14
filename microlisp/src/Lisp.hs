@@ -162,18 +162,17 @@ eval bds p@(P (S "cons") (P left (P right Nil))) =
         (Just le, Just re) -> Just (P le re)
         (_, _) -> Nothing
 -- eval built in function application car (e.g., (car (cons 1 nil)) )
-eval bds p@(P (S "car") (P fst snd)) =
-  let fstEval = eval bds fst
-      sndEval = eval bds snd
-   in case (fstEval, sndEval) of
-        (Just (P first _), _) -> Just first
+eval bds p@(P (S "car") (P expr _)) =
+  let exprEval = eval bds expr
+   in case exprEval of
+        (Just (P first second)) -> Just first
         _ -> Nothing
 -- eval built in function application cdr (e.g., (cdr (cons 1 nil)) )
-eval bds p@(P (S "cdr") (P fst snd)) =
-  let fstEval = eval bds fst
-      sndEval = eval bds snd
-   in case (fstEval, sndEval) of
-        (Just (P first second), _) -> Just second
+eval bds p@(P (S "cdr") (P expr _)) =
+  let exprEval = eval bds expr
+   in -- sndEval = eval bds snd
+      case exprEval of
+        (Just (P first second)) -> Just second
         _ -> Nothing
 -- eval quote special form
 -- TODO
