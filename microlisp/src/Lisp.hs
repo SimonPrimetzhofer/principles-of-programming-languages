@@ -170,8 +170,7 @@ eval bds p@(P (S "car") (P expr _)) =
 -- eval built in function application cdr (e.g., (cdr (cons 1 nil)) )
 eval bds p@(P (S "cdr") (P expr _)) =
   let exprEval = eval bds expr
-   in -- sndEval = eval bds snd
-      case exprEval of
+   in case exprEval of
         (Just (P first second)) -> Just second
         _ -> Nothing
 -- eval quote special form
