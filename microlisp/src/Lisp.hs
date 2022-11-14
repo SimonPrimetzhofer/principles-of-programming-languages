@@ -169,12 +169,12 @@ eval bds p@(P (S "car") (P fst snd)) =
         (Just (P first _), _) -> Just first
         _ -> Nothing
 -- eval built in function application cdr (e.g., (cdr (cons 1 nil)) )
--- eval bds p@(P (S "cdr") (P fst snd)) =
---   let fstEval = eval bds fst
---       sndEval = eval bds snd
---    in case (fstEval, sndEval) of
---         (Just _, (P second _)) -> Just second
---         _ -> Nothing
+eval bds p@(P (S "cdr") (P fst snd)) =
+  let fstEval = eval bds fst
+      sndEval = eval bds snd
+   in case (fstEval, sndEval) of
+        (Just (P first second), _) -> Just second
+        _ -> Nothing
 -- eval quote special form
 -- TODO
 
