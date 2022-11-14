@@ -124,17 +124,30 @@ eval bds b@(P (S op) (P left (P right Nil)))
 
 -- eval relational function applications (operators "<", ">", "<=", and ">=")
 eval bds b@(P (S op) (P left (P right Nil)))
-  | elem op ["==", "!="] =
+  | elem op ["<", ">", "<=", ">="] =
     let lr = eval bds left
         rr = eval bds right
-     in case op of
-          "==" -> Just (B (lr == rr))
-          "!=" -> Just (B (lr /= rr))
-          _ -> Nothing -- will not happen
-
+     in case (lr, rr) of
+          (Just (I li), Just (I ri)) ->
+            case op of
+              "<" -> Just (B (li < ri))
+              ">" -> Just (B (li > ri))
+              "<=" -> Just (B (li <= ri))
+              ">=" -> Just (B (li >= ri))
+              _ -> Nothing -- will not happen
+          (_, _) -> Nothing
 -- eval Boolean binary function applications (operators "&&" and "||")
--- TODO
-
+eval bds b@(P (S op) (P left (P right Nil)))
+  | elem op ["&&", "||"] =
+    let lr = eval bds left
+        rr = eval bds right
+     in case (lr, rr) of
+          (Just (B li), Just (B ri)) ->
+            case op of
+              "&&" -> Just (B (li && ri))
+              "||" -> Just (B (li || ri))
+              _ -> Nothing -- will not happen
+          (_, _) -> Nothing
 -- eval Boolean unary Boolean not function application (e.g., (! true))
 -- TODO
 
