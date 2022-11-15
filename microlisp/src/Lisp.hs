@@ -206,8 +206,19 @@ eval bds e@(P (S op) _)
       ("++ Evaluating invalid unary operation: " ++ (show e))
       Nothing
 -- eval function applications
--- TODO
-
+eval bds e@(P function arguments) =
+  let functionEval = eval bds function
+   in case functionEval of
+        (Just (F params functionBody)) ->
+          let paramArgumentsEval = extendBds bds params arguments
+           in case paramArgumentsEval of
+                (Just paramArguments) ->
+                  let functionBodyEval = eval paramArguments functionBody
+                   in case functionBodyEval of
+                        (Just body) -> functionBodyEval
+                        _ -> Nothing
+                _ -> Nothing
+        _ -> Nothing
 -- evaluating any other operation is invalid
 eval bds e =
   trace
