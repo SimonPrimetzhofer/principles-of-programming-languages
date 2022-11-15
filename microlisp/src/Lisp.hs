@@ -174,11 +174,25 @@ eval bds p@(P (S "cdr") (P expr _)) =
         (Just (P first second)) -> Just second
         _ -> Nothing
 -- eval quote special form
--- TODO
-
+eval bds e@(P (S "quote") (P expr Nil)) =
+  Just expr
 -- eval if special form
--- TODO
-
+eval bds e@(P (S "if") (P condition (P trueExpr (P falseExpr Nil)))) =
+  let conditionEval = eval bds condition
+   in case conditionEval of
+        (Just (B cond)) ->
+          if cond
+            then
+              let trueExprEval = eval bds trueExpr
+               in case trueExprEval of
+                    (Just exprTrue) -> Just exprTrue
+                    _ -> Nothing
+            else
+              let falseExprEval = eval bds falseExpr
+               in case falseExprEval of
+                    (Just exprFalse) -> Just exprFalse
+                    _ -> Nothing
+        _ -> Nothing
 -- eval of binary operator with other than two arguments fails
 eval bds e@(P (S op) _)
   | elem op ["+", "-", "*", "/", "%", "<", ">", "<=", ">=", "&&", "||", "==", "!=", "cons"] =
