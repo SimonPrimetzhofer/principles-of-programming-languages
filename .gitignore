@@ -1,1 +1,6 @@
 *.pdf
+target/
+project/
+null/
+.idea
+.bsp
