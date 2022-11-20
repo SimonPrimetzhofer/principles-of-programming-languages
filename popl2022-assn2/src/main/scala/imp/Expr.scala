@@ -98,6 +98,7 @@ object Expr {
           case _ => None
         }
       }
+      case _ => None
     }
   }
 }
