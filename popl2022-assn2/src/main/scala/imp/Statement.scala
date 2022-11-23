@@ -37,7 +37,7 @@ object Statement {
             Console.println(text + " " + evalExpr.x)
             (Empty, state)
           }
-          case _ => (Empty, state)
+          case _ => (Error("Cannot evaluate expression of print statement", Empty), state)
         }
       }
       case AssnStmt(left, right) => {
@@ -45,7 +45,7 @@ object Statement {
         val rightExpr = eval(right, state)
         (leftExpr, rightExpr) match {
           case (_, Some(rightExpr)) => (Empty, state.updt(left.name, rightExpr))
-          case _ => (Empty, state)
+          case _ => (Error("Cannot evaluate assignment", Empty), state)
         }
       }
       case IfStmt(cond, thenComm, elseComm) => {
@@ -58,7 +58,7 @@ object Statement {
               exec(elseComm, state)
             }
           }
-          case _ => (Empty, state)
+          case _ => (Error("Found invalid if statement", Empty), state)
         }
       }
       case WhileStmt(cond, body) => {
@@ -72,7 +72,7 @@ object Statement {
               (Empty, state)
             }
           }
-          case _ => (Empty, state)
+          case _ => (Error("Found invalid while statement", Empty), state)
         }
       }
       case BlockStmt(sList) => {
@@ -90,7 +90,7 @@ object Statement {
         }
         (Empty, currState)
       }
-      case _ => (Empty, state)
+      case _ => (Error("Found invalid block statement", Empty), state)
     }
   }
 }
