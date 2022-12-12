@@ -10,6 +10,19 @@ trait Field[F] {
 }
 
 object Field {
-  // TODO: given for Field[Int]
-  // TODO: given for Field[Double]
+  given intField: Field[Int] = new Field[Int]:
+    def plus(x: Int, y: Int): Int = x + y;
+    def times(x: Int, y: Int): Int = x * y;
+    def neg(x: Int): Int = -x;
+    def recip(x: Int): Int = 1/x;
+    val zero: Int = 0;
+    val one: Int = 1;
+  
+  given doubleField: Field[Double] = new Field[Double]:
+    def plus(x: Double, y: Double): Double = x + y;
+    def times(x: Double, y: Double): Double = x * y;
+    def neg(x: Double): Double = -x;
+    def recip(x: Double): Double = 1.0/x;
+    val zero: Double = 0.0;
+    val one: Double = 1.0;
 }

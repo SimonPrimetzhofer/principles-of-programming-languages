@@ -20,7 +20,28 @@ object Rtnl {
 
   private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
 
-  // TODO: given for Field[Rtnl]
+  given rtnlField: Field[Rtnl] = new Field[Rtnl] {
+    def plus(x: Rtnl, y: Rtnl): Rtnl =
+      val minDenom = gcd(x.denom, y.denom)
+      new Rtnl(
+        ((x.numer * y.denom) + (y.numer * x.denom)) / minDenom,
+        x.denom * y.denom / minDenom);
+
+    def times(x: Rtnl, y: Rtnl): Rtnl =
+      val minDenom = gcd(x.denom, y.denom)
+      new Rtnl(x.numer * y.numer / minDenom, x.denom * y.denom / minDenom);
+
+    def neg(x: Rtnl): Rtnl =
+      val cancelFactor = gcd(x.numer, x.denom)
+      new Rtnl(-x.numer / cancelFactor, x.denom / cancelFactor);
+
+    def recip(x: Rtnl): Rtnl =
+      val cancelFactor = Math.abs(gcd(x.numer, x.denom))
+      new Rtnl(x.denom / cancelFactor, x.numer / cancelFactor);
+
+    val zero: Rtnl = new Rtnl(0, 1);
+    val one: Rtnl = new Rtnl(1, 1);
+  }
 }
 
 // Application
@@ -33,6 +54,6 @@ object RtnlApp extends App {
         wholeNumber ^^ { case n => Rtnl(n.toInt) }
 
   }
-  RtnlInteractive.interact(Map("x" -> Rtnl(1, 2), "y" -> Rtnl(2, 3))) (using null) // TODO: delete using
+  RtnlInteractive.interact(Map("x" -> Rtnl(1, 2), "y" -> Rtnl(2, 3)));
 
 }

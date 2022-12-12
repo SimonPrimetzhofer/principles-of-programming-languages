@@ -30,10 +30,76 @@ object Expr {
   def eval[T](expr: Expr[T], bds: Map[String, T])(using field: Field[T]) : T = {
     expr match {
       case Lit(x) => x
-      case _ => ??? // TODO eval for expressions
+      case Var(n) => bds.get(n).get
+      case Add(left, right) => field.plus(eval(left, bds), eval(right, bds))
+      case Minus(sub) => field.neg(eval(sub, bds))
+      case Mult(left, right) => field.times(eval(left, bds), eval(right, bds))
+      case Recip(sub) => field.recip(eval(sub, bds))
     }
   }
 
-  def simplify[T](expr: Expr[T])(using field: Field[T]) : Expr[T] = ??? // TODO
+  def simplify[T](expr: Expr[T])(using field: Field[T]) : Expr[T] =
+    expr match {
+      case Lit(x) => Lit(x)
+      case Var(n) => Var(n)
+      case Add(left, right) => {
+        val simpleLeft = simplify(left);
+        val simpleRight = simplify(right);
 
+        (simpleLeft, simpleRight) match {
+          // a + 0 = a
+          case (_, Lit(field.zero)) => simpleLeft
+          case (Lit(field.zero), _) => simpleRight
+
+          // a + -a = 0
+          case (Lit(x), Lit(y)) => {
+            if (x.equals(field.neg(y)) || y.equals(field.neg(x))) {
+              Lit(field.zero)
+            } else {
+              Add(simpleLeft, simpleRight)
+            }
+          }
+          case (_, _) => Add(simpleLeft, simpleRight)
+        }
+      }
+      case Minus(sub) => {
+        val simpleSub = simplify(sub);
+
+        simpleSub match {
+          case Minus(subsub) => subsub
+          case _ => Minus(simpleSub)
+        }
+      }
+      case Mult(left, right) => {
+        val simpleLeft = simplify(left);
+        val simpleRight = simplify(right);
+
+        (simpleLeft, simpleRight) match {
+          // a * 0 = 0
+          case (_, field.zero) | (field.zero, _) => Lit(field.zero)
+
+          // a * 1 = a
+          case (_, Lit(field.one)) => simpleLeft
+          case (Lit(field.one), _) => simpleRight
+
+          // a * a^-1 = 1
+          case (Lit(x), Lit(y)) => {
+            if (x.equals(field.neg(y)) || y.equals(field.neg(x))) {
+              Lit(field.one)
+            } else {
+              Mult(simpleLeft, simpleRight)
+            }
+          }
+          case (_, _) => Mult(simpleLeft, simpleRight)
+        }
+      }
+      case Recip(sub) => {
+        val simpleSub = simplify(sub);
+
+        simpleSub match {
+          case Recip(subsub) => subsub
+          case _ => Recip(simpleSub)
+        }
+      }
+    }
 }

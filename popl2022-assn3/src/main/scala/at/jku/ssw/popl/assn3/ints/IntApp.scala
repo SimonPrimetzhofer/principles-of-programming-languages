@@ -14,6 +14,6 @@ object IntApp extends App {
 
   }
   
-  IntInteractive.interact(Map("x" -> 1, "y" -> 2))(using null) // TODO: delete using
+  IntInteractive.interact(Map("x" -> 1, "y" -> 2));
 
 }

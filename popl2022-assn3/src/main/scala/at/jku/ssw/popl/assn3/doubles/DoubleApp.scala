@@ -13,5 +13,5 @@ object DoubleApp extends App {
 
   }
   
-  DoubleInteractive.interact(Map("x" -> 1.0, "y" -> 2.0))(using null) // TODO: delete using
+  DoubleInteractive.interact(Map("x" -> 1.0, "y" -> 2.0));
 }

@@ -11,7 +11,22 @@ object Cplx {
   def apply(real: Double, imag: Double) =  new Cplx(real, imag)
   def apply(real: Double) = new Cplx(real, 0.0)
 
-  // TODO: given for Field[Cplx]
+  given cplxField: Field[Cplx] = new Field[Cplx] {
+    def plus(x: Cplx, y: Cplx): Cplx = new Cplx(x.real + y.real, x.imag + y.imag);
+
+    def times(x: Cplx, y: Cplx): Cplx = new Cplx(
+      (x.real * y.real) - (x.imag * y.imag),
+      (x.real * y.imag) + (x.imag * y.real));
+
+    def neg(x: Cplx): Cplx = new Cplx(-x.real, -x.imag);
+
+    def recip(x: Cplx): Cplx = new Cplx(
+      x.real / ((x.real * x.real) + (x.imag * x.imag)),
+      -x.imag / ((x.real * x.real) + (x.imag * x.imag)));
+
+    val zero: Cplx = new Cplx(0.0, 0.0);
+    val one: Cplx = new Cplx(1.0, 0.0);
+  }
 }
 
 // Application
