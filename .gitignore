@@ -4,3 +4,10 @@ project/
 null/
 .idea
 .bsp
+*.class
+*.json
+*.tasty
+*.semanticdb
+*.db
+*.log
+*.meta
