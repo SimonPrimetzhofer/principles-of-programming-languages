@@ -22,17 +22,17 @@ object Rtnl {
 
   given rtnlField: Field[Rtnl] = new Field[Rtnl] {
     def plus(x: Rtnl, y: Rtnl): Rtnl =
-      val minDenom = gcd(x.denom, y.denom)
+      val minDenom = Math.abs(gcd(x.denom, y.denom))
       new Rtnl(
         ((x.numer * y.denom) + (y.numer * x.denom)) / minDenom,
         x.denom * y.denom / minDenom);
 
     def times(x: Rtnl, y: Rtnl): Rtnl =
-      val minDenom = gcd(x.denom, y.denom)
+      val minDenom = Math.abs(gcd(x.denom, y.denom))
       new Rtnl(x.numer * y.numer / minDenom, x.denom * y.denom / minDenom);
 
     def neg(x: Rtnl): Rtnl =
-      val cancelFactor = gcd(x.numer, x.denom)
+      val cancelFactor = Math.abs(gcd(x.numer, x.denom))
       new Rtnl(-x.numer / cancelFactor, x.denom / cancelFactor);
 
     def recip(x: Rtnl): Rtnl =

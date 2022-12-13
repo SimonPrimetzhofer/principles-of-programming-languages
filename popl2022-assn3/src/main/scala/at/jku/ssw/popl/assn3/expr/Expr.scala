@@ -51,6 +51,28 @@ object Expr {
           case (_, Lit(field.zero)) => simpleLeft
           case (Lit(field.zero), _) => simpleRight
 
+          case (Minus(left), Var(right)) => {
+            left match {
+              case Var(v) => {
+                if (v.equals(right)) {
+                  Lit(field.zero)
+                } else {
+                  Add(simpleLeft, simpleRight)
+                }
+              }
+            }
+          }
+          case (Var(left), Minus(right)) => {
+            right match {
+              case Var(v) => {
+                if (v.equals(left)) {
+                  Lit(field.zero)
+                } else {
+                  Add(simpleLeft, simpleRight)
+                }
+              }
+            }
+          }
           // a + -a = 0
           case (Lit(x), Lit(y)) => {
             if (x.equals(field.neg(y)) || y.equals(field.neg(x))) {
@@ -59,7 +81,7 @@ object Expr {
               Add(simpleLeft, simpleRight)
             }
           }
-          case (_, _) => Add(simpleLeft, simpleRight)
+          case _ => Add(simpleLeft, simpleRight)
         }
       }
       case Minus(sub) => {
