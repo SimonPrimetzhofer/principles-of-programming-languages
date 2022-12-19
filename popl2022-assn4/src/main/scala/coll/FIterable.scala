@@ -6,5 +6,11 @@ trait Builder[A, +C[+A]] {
 }
 
 trait FIterable[+E, +C[+A]] {
+  def isEmpty(): Boolean;
 
+  def add[U >: E](elem: U): C[U];
+
+  def foreach(action: E => Unit): Unit;
+
+  protected[this] def newBuilder[X]: Builder[X, C];
 }
