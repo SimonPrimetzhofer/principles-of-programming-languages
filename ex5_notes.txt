@@ -1,0 +1,14 @@
+def head = {
+	this match {
+		case LCons(hdF, tlFn) => hdF()
+		case Nomore => this None		??? ka, hobs ned lesn kinna
+	}
+
+}
+
+def map[R](f: E => R) = {
+	this match {
+		Nomore => Nomore
+		LCons(hdFn, tlFn) => LCons(() => f(hdFn()), () => tlFn().map(f))
+	}
+}

@@ -39,6 +39,6 @@ object CplxApp extends App {
         "(" ~> wholeNumber <~ ")" ^^ { case r => Cplx(r.toInt) }
 
   }
-  CplxInteractive.interact(Map("x" -> Cplx(1, 1), "y" -> Cplx(2, 2))) (using null) // TODO: delete using
+  CplxInteractive.interact(Map("x" -> Cplx(1, 1), "y" -> Cplx(2, 2)))
 
 }
