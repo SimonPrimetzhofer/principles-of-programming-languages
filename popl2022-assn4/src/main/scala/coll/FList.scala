@@ -20,11 +20,6 @@ sealed trait FList[+E] extends FIterable[E, FList]{
         tail.foreach(action)
       }
     }
-    /*var current = this
-    while (!current.isEmpty) {
-      action(current.head)
-      current = current.tail
-    }*/
   }
 
   protected[this] def newBuilder[X]: Builder[X, FList] =
@@ -37,7 +32,6 @@ sealed trait FList[+E] extends FIterable[E, FList]{
           list.add(x)
         }
         list
-        //new List[X](b.head, b.tail)
       };
     }
 }
