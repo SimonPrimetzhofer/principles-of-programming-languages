@@ -7,11 +7,7 @@ trait FSet[+E] extends FIterable[E, FSet] {
 
   val tree: HashTree[E]
 
-  //val EmptySet = new FSet[Nothing] {
-  //  private[coll] val tree = HashTree.Empty;
-  // }
-
-  override def isEmpty(): Boolean = ???
+  override def isEmpty: Boolean = ???
 
   override def add[U >: E](elem: U): FSet[U] = ???
 

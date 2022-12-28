@@ -6,7 +6,7 @@ trait Builder[A, +C[+A]] {
 }
 
 trait FIterable[+E, +C[+A]] {
-  def isEmpty(): Boolean;
+  def isEmpty: Boolean;
 
   def add[U >: E](elem: U): C[U];
 
