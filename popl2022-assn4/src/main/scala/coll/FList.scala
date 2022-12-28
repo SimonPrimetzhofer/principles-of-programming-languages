@@ -5,12 +5,7 @@ import scala.collection.mutable.ListBuffer
 sealed trait FList[+E] extends FIterable[E, FList]{
   def isEmpty: Boolean = this eq FNil
 
-  def add[U >: E](elem: U): FList[U] = {
-    val b = newBuilder[U];
-    foreach(elem => b.collect(elem));
-    b.collect(elem)
-    b.build;
-  }
+  def add[U >: E](elem: U): FList[U] = new FCons[U](elem, this)
 
   def foreach(action: E => Unit): Unit = {
     this match {
