@@ -51,7 +51,7 @@ trait FSet[+E] extends FIterable[E, FSet] {
 }
 
 object FSet {
-  val EmptySet = new FSet[Nothing] {
+  def apply(): FSet[Nothing] = new FSet[Nothing] {
     private[coll] val tree = HashTree.Empty
   }
 }
