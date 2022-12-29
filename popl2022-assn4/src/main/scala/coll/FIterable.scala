@@ -27,18 +27,21 @@ trait FIterable[+E, +C[+A]] {
 
   }
 
-  /*def fold[R](z: R)(acc: (R, E) => R): R = {
+  def fold[R](z: R)(acc: (R, E) => R): R = {
     var curr = z
-    foreach(elem => curr = acc(elem, curr))
+    foreach(elem => curr = acc(curr, elem))
     curr
-  }*/
-
-  /*def sum(f: E => Int) : Int = {
-    var sum = 0
-    fold(elem => )
   }
 
-  def count : Int – counting the elements in this iterable
+  def sum(f: E => Int) : Int = {
+    fold[Int](0)((sum, elem) => sum + f(elem))
+  }
 
-  def toString(sep: String = ", ", pre: String = "", post: String*/
+  def count : Int = {
+    fold[Int](0)((count, elem) => count + 1)
+  }
+
+  def toString(sep: String = ", ", pre: String = "", post: String = "", toString: E => String = e => e.toString) : String = {
+    fold[String]("")((concatString, elem) => concatString + "")
+  }
 }

@@ -13,4 +13,6 @@ object FSetApp extends App {
     persons.foreach(println(_))
 
     HashTree.printTree(persons.tree)
+
+    println(persons.count)
 }
