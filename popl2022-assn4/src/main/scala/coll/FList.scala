@@ -22,9 +22,9 @@ sealed trait FList[+E] extends FIterable[E, FList]{
       private val b = new ListBuffer[X];
       override def collect(elem: X) = b.addOne(elem);
       override def build: FList[X] = {
-        val list: FList[X] = FNil
+        var list: FList[X] = FNil
         for (x <- b.reverse) {
-          list.add(x)
+          list = list.add(x)
         }
         list
       };

@@ -41,9 +41,9 @@ trait FSet[+E] extends FIterable[E, FSet] {
       private val b = new ListBuffer[X];
       override def collect(elem: X) = b.addOne(elem);
       override def build: FSet[X] = {
-        val set: FSet[X] = FSet()
+        var set: FSet[X] = FSet()
         for (x <- b.reverse) {
-          set.add(x)
+          set = set.add(x)
         }
         set
       };
