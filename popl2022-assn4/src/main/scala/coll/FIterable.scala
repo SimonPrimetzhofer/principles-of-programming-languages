@@ -24,7 +24,6 @@ trait FIterable[+E, +C[+A]] {
     val b = newBuilder[E]
     foreach(elem => if (p(elem)) then b.collect(elem))
     b.build
-
   }
 
   def fold[R](z: R)(acc: (R, E) => R): R = {
@@ -42,6 +41,11 @@ trait FIterable[+E, +C[+A]] {
   }
 
   def toString(sep: String = ", ", pre: String = "", post: String = "", toString: E => String = e => e.toString) : String = {
-    fold[String]("")((concatString, elem) => concatString + "")
+    pre + fold[String]("")((concatString, elem) => {
+      if concatString.length == 0 then
+        concatString + toString(elem)
+      else
+         concatString + sep + toString(elem)
+    }) + post
   }
 }

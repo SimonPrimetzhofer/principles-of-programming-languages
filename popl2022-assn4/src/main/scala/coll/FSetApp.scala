@@ -14,5 +14,16 @@ object FSetApp extends App {
 
     HashTree.printTree(persons.tree)
 
+    println(persons.map(student => student.lastName).sum(lastname => lastname.length))
+
+    println(students.filter(student => student.study == Study.INF)
+      .toString("SEP ", "INF ", " INF done", student => student.firstName + " " + student.lastName))
+
+    println(persons.fold("firstnames: ")((concat, person) => concat + person.firstName))
+
+    println(persons.sum(person => person.lastName.length))
+
     println(persons.count)
+
+    println(persons.toString(", ", "persons ", " END", person => person.lastName))
 }
