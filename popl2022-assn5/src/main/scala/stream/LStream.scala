@@ -28,7 +28,7 @@ abstract sealed trait LStream[+E] {
         if (pred(hdFn())) then
           LCons(hdFn, () => tlFn().filter(pred))
         else
-          LCons(() => tlFn().head, () => tlFn().tail.filter(pred))
+          tlFn().filter(pred)
     }
   }
   def take(n: Int): LStream[E] = {
