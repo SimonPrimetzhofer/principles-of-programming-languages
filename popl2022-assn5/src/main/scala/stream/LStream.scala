@@ -1,10 +1,12 @@
 package stream
 
+import scala.collection.mutable.ListBuffer
+
 abstract sealed trait LStream[+E] {
   def head: E = {
     this match {
+      case Nomore => throw IllegalStateException()
       case LCons(hdFn, tlFn) => hdFn()
-      //case Nomore => head // TODO
     }
   }
   def tail: LStream[E] = {
@@ -35,31 +37,40 @@ abstract sealed trait LStream[+E] {
       case LCons(hdFn, tlFn) => if (n > 0) then LCons(hdFn, () => tlFn().take(n - 1)) else Nomore
     }
   }
-  def foreach(action: E => Unit): Unit = ???
-  def toList : List[E] = ???
-  def find(pred: E => Boolean): Option[E] = ???
+  def foreach(action: E => Unit): Unit = {
+    this match {
+      case Nomore => Nomore
+      case LCons(hdFn, tlFn) => {
+        action(hdFn())
+        tlFn().foreach(action)
+      }
+    }
+  }
+  def toList : List[E] = {
+    var list = List[E]();
+    foreach(elem => list ::= elem)
+    list
+  }
+
+  def find(pred: E => Boolean): Option[E] = Option(filter(pred).take(1).head)
 }
 
 case object Nomore extends LStream[Nothing];
 case class LCons[+E](hdFn: () => E, tlFn: () => LStream[E]) extends LStream[E];
 
 object LStream {
-  def apply[E](head: => E, tail: => LStream[E]) : LStream[E] = {
-    new LStream[E] {
-      override def head = head
-      override def tail = tail
-    }
-  }
-  def iterate[E](seed: E, next: E => E) : LStream[E] = ???
-  def numsFrom(n: Int): LStream[Int] = ???
+  def apply[E](head: => E, tail: => LStream[E]) : LStream[E] = LCons[E](() => head, () => tail)
+
+  def iterate[E](seed: E, next: E => E) : LStream[E] = LCons[E](() => seed, () => iterate(next(seed), next))
+
+  def numsFrom(n: Int): LStream[Int] = iterate(n, elem => elem + 1)
 }
 
 def isPrime(n: Int): Boolean =
   (n > 1) && !(2 to scala.math.sqrt(n).toInt).exists(x => n % x == 0)
 
-
 object Main {
   def main(args: Array[String]): Unit = {
-
+    LStream.numsFrom(2).filter(num => isPrime(num)).take(10).foreach(elem => println(elem))
   }
 }
